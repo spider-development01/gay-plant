@@ -36,7 +36,7 @@ export async function onRequestPost(context) {
 
     const targetLang = languageConfig[language] || languageConfig.en;
 
-    const model = context.env.GEMINI_MODEL || "gemini-2.5-flash";
+    const model = context.env.GEMINI_MODEL || "gemini-3.5-flash-lite";
     const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
 
     const prompt = `You are an expert botanist and horticulturist.
