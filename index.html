@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FloraScan — Plant Identifier</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-warm: #FAF7F2;
+      --bg-card: #F4EFE6;
+      --bg-card-subtle: #ECE4D6;
+      --green-dark: #1E3B2B;
+      --green-primary: #2C523C;
+      --green-accent: #3E7052;
+      --green-tint: #E8F0EB;
+      --text-main: #232B25;
+      --text-muted: #616B63;
+      --border-beige: #DECDB7;
+      --border-green: #B7D1C1;
+      --danger-bg: #FBECE8;
+      --danger-text: #9B3922;
+      --success-bg: #EAF4EE;
+      --success-text: #21633D;
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 22px;
+      --radius-full: 9999px;
+      --shadow: 0 8px 24px rgba(30, 59, 43, 0.08);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg-warm);
+      color: var(--text-main);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background-image: radial-gradient(var(--bg-card-subtle) 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+
+    h1, h2, h3, h4 {
+      font-family: 'Fraunces', serif;
+      color: var(--green-dark);
+    }
+
+    .navbar {
+      background: rgba(250, 247, 242, 0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border-beige);
+      padding: 0.85rem 1.25rem;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .nav-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      text-decoration: none;
+      color: var(--green-dark);
+      font-weight: 700;
+      font-size: 1.2rem;
+    }
+
+    .brand-icon {
+      width: 36px;
+      height: 36px;
+      background: var(--green-primary);
+      color: #FFF;
+      border-radius: var(--radius-sm);
+      display: grid;
+      place-items: center;
+    }
+
+    .badge {
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.3rem 0.7rem;
+      border-radius: var(--radius-full);
+      background: var(--green-tint);
+      color: var(--green-dark);
+      border: 1px solid var(--border-green);
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2rem 1.25rem;
+      flex: 1;
+      width: 100%;
+    }
+
+    .hero {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .hero h2 {
+      font-size: clamp(2rem, 4vw, 2.5rem);
+      margin-bottom: 0.5rem;
+    }
+
+    .hero p {
+      color: var(--text-muted);
+      font-size: 1rem;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-beige);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      box-shadow: var(--shadow);
+      margin-bottom: 2rem;
+    }
+
+    .dropzone {
+      border: 2px dashed var(--border-beige);
+      background: var(--bg-warm);
+      border-radius: var(--radius-md);
+      padding: 2.5rem 1.5rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .dropzone:hover, .dropzone.dragover {
+      border-color: var(--green-accent);
+      background: var(--green-tint);
+    }
+
+    .drop-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: var(--bg-card);
+      color: var(--green-primary);
+      display: grid;
+      place-items: center;
+      margin: 0 auto 1rem;
+      border: 1px solid var(--border-beige);
+    }
+
+    .btn-group {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.8rem;
+      margin-top: 1.25rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 600;
+      padding: 0.65rem 1.25rem;
+      border-radius: var(--radius-full);
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn:active { transform: scale(0.97); }
+
+    .btn-primary {
+      background: var(--green-primary);
+      color: #FFF;
+    }
+    .btn-primary:hover { background: var(--green-dark); }
+
+    .btn-secondary {
+      background: var(--bg-card);
+      border: 1px solid var(--border-beige);
+      color: var(--green-dark);
+    }
+    .btn-secondary:hover { background: var(--bg-card-subtle); }
+
+    input[type="file"] { display: none; }
+
+    /* Loader */
+    .loader {
+      display: none;
+      text-align: center;
+      padding: 3rem 1rem;
+    }
+
+    .spin-leaf {
+      color: var(--green-primary);
+      animation: spin 1.8s infinite ease-in-out;
+      margin-bottom: 1rem;
+    }
+
+    @keyframes spin {
+      0%, 100% { transform: rotate(-8deg); }
+      50% { transform: rotate(8deg) scale(1.1); }
+    }
+
+    /* Result View */
+    .result-view {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .plant-header {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    @media (max-width: 650px) {
+      .plant-header { grid-template-columns: 1fr; }
+    }
+
+    .plant-img {
+      width: 100%;
+      height: 240px;
+      border-radius: var(--radius-md);
+      object-fit: cover;
+      border: 1px solid var(--border-beige);
+      background: #000;
+    }
+
+    .scientific {
+      font-family: 'Fraunces', serif;
+      font-style: italic;
+      color: var(--green-accent);
+      font-size: 1.1rem;
+      margin-bottom: 0.6rem;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .tag {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 0.25rem 0.6rem;
+      border-radius: var(--radius-full);
+      background: var(--bg-card-subtle);
+      border: 1px solid var(--border-beige);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .metric-card {
+      background: var(--bg-warm);
+      border: 1px solid var(--border-beige);
+      border-radius: var(--radius-md);
+      padding: 1rem;
+    }
+
+    .metric-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 0.3rem;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .metric-val {
+      font-weight: 600;
+      color: var(--green-dark);
+      font-size: 0.95rem;
+    }
+
+    .fun-fact {
+      background: #FAF3E6;
+      border-left: 4px solid var(--green-accent);
+      padding: 1rem 1.25rem;
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+      color: #4D3718;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1.5rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border-beige);
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="#" class="brand" onclick="location.reload()">
+        <div class="brand-icon">
+          <!-- Leaf SVG -->
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>
+        </div>
+        <span>FloraScan</span>
+      </a>
+      <span class="badge">Gemini 3.5 Flash Lite</span>
+    </div>
+  </nav>
+
+  <main class="container">
+    <div class="hero">
+      <h2>Instant Plant Identification</h2>
+      <p>Snap a picture or upload foliage to receive botanical data & care instructions.</p>
+    </div>
+
+    <!-- Hidden Native Inputs -->
+    <input type="file" id="cameraInput" accept="image/*" capture="environment">
+    <input type="file" id="fileInput" accept="image/*">
+
+    <!-- Upload Box -->
+    <div class="card" id="scanCard">
+      <div class="dropzone" id="dropzone">
+        <div class="drop-icon">
+          <!-- Camera/Plus SVG -->
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
+        </div>
+        <h3>Take Photo or Drop Image Here</h3>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem;">Supports JPG, PNG, WEBP</p>
+        
+        <div class="btn-group">
+          <button class="btn btn-primary" onclick="document.getElementById('cameraInput').click()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
+            Take Photo
+          </button>
+          <button class="btn btn-secondary" onclick="document.getElementById('fileInput').click()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            Upload Photo
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loader -->
+    <div class="card loader" id="loader">
+      <div class="spin-leaf">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/></svg>
+      </div>
+      <h3>Analyzing Foliage...</h3>
+      <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.3rem;">Plant Lens AI is inspecting leaf structures...</p>
+    </div>
+
+    <!-- Results Section -->
+    <div class="card result-view" id="resultView">
+      <div class="plant-header">
+        <img id="plantImg" class="plant-img" src="" alt="Plant Preview">
+        <div>
+          <div class="tags">
+            <span class="tag" id="tagFamily">Family</span>
+            <span class="tag" id="tagOrigin">Origin</span>
+            <span class="tag" id="tagCare" style="background: var(--green-tint); color: var(--green-dark);">Easy Care</span>
+          </div>
+          <h2 id="plantName" style="font-size: 1.8rem; margin-bottom: 0.2rem;">Common Name</h2>
+          <div class="scientific" id="plantSciName">Scientific Name</div>
+          <p id="plantSummary" style="font-size: 0.92rem; color: var(--text-muted); line-height: 1.5;"></p>
+        </div>
+      </div>
+
+      <!-- Quick Metrics Grid -->
+      <div class="grid">
+        <div class="metric-card">
+          <div class="metric-title">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="M2 12h2"/><path d="M20 12h2"/></svg>
+            Light
+          </div>
+          <div class="metric-val" id="metricLight">-</div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-title">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+            Water
+          </div>
+          <div class="metric-val" id="metricWater">-</div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-title">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 5.172a2 2 0 0 0-3.414 0l-3.87 6.7A2 2 0 0 0 4.458 15h15.084a2 2 0 0 0 1.742-3.128l-3.87-6.7A2 2 0 0 0 14 5.172Z"/></svg>
+            Pet Safety
+          </div>
+          <div class="metric-val" id="metricPet">-</div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-title">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+            Health Status
+          </div>
+          <div class="metric-val" id="metricHealth">-</div>
+        </div>
+      </div>
+
+      <div class="fun-fact">
+        <strong>Did you know?</strong> <span id="funFactText"></span>
+      </div>
+
+      <button class="btn btn-secondary" onclick="resetApp()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+        Scan Another Plant
+      </button>
+    </div>
+  </main>
+
+  <footer>
+    Deployed on Cloudflare Pages • Built with Plant Lens AI
+  </footer>
+
+  <!-- Canvas for fast image resizing -->
+  <canvas id="canvas" style="display: none;"></canvas>
+
+  <script>
+    const cameraInput = document.getElementById('cameraInput');
+    const fileInput = document.getElementById('fileInput');
+    const dropzone = document.getElementById('dropzone');
+
+    [cameraInput, fileInput].forEach(inp => {
+      inp.addEventListener('change', e => {
+        if (e.target.files && e.target.files[0]) handleFile(e.target.files[0]);
+      });
+    });
+
+    ['dragover', 'dragenter'].forEach(eName => {
+      dropzone.addEventListener(eName, (e) => { e.preventDefault(); dropzone.classList.add('dragover'); });
+    });
+    ['dragleave', 'drop'].forEach(eName => {
+      dropzone.addEventListener(eName, (e) => { e.preventDefault(); dropzone.classList.remove('dragover'); });
+    });
+    dropzone.addEventListener('drop', (e) => {
+      if (e.dataTransfer.files?.[0]) handleFile(e.dataTransfer.files[0]);
+    });
+
+    // Fast client-side image compression (~1000px)
+    async function handleFile(file) {
+      if (!file.type.startsWith('image/')) return alert('Please upload an image.');
+
+      setLoading(true);
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          const maxDim = 1024;
+          let w = img.width, h = img.height;
+          if (w > maxDim) {
+            h = Math.round((h * maxDim) / w);
+            w = maxDim;
+          }
+          const canvas = document.getElementById('canvas');
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, w, h);
+
+          const dataUrl = canvas.toDataURL('image/jpeg', 0.82);
+          const base64 = dataUrl.split(',')[1];
+          document.getElementById('plantImg').src = dataUrl;
+
+          sendToApi(base64);
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    async function sendToApi(base64Image) {
+      try {
+        const res = await fetch('/api/identify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ image: base64Image, mimeType: 'image/jpeg' })
+        });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Server error');
+
+        if (!data.is_plant) {
+          alert('No plant detected. Please try another close-up photo.');
+          resetApp();
+          return;
+        }
+
+        renderPlant(data);
+      } catch (err) {
+        alert('Error identifying plant: ' + err.message);
+        resetApp();
+      }
+    }
+
+    function renderPlant(d) {
+      setLoading(false);
+      document.getElementById('scanCard').style.display = 'none';
+      document.getElementById('resultView').style.display = 'block';
+
+      document.getElementById('plantName').textContent = d.common_name || 'Unknown Specimen';
+      document.getElementById('plantSciName').textContent = d.scientific_name || '';
+      document.getElementById('tagFamily').textContent = d.family || 'Botanic';
+      document.getElementById('tagOrigin').textContent = d.origin || 'Tropical';
+      document.getElementById('tagCare').textContent = (d.care_level || 'Moderate') + ' Care';
+      document.getElementById('plantSummary').textContent = d.summary || '';
+
+      document.getElementById('metricLight').textContent = d.light || 'Bright Indirect';
+      document.getElementById('metricWater').textContent = d.water || 'Moderate';
+      
+      const petVal = document.getElementById('metricPet');
+      petVal.textContent = d.pet_safe ? 'Safe for Pets' : 'Toxic to Pets';
+      petVal.style.color = d.pet_safe ? 'var(--success-text)' : 'var(--danger-text)';
+
+      document.getElementById('metricHealth').textContent = d.health?.status || 'Healthy';
+      document.getElementById('funFactText').textContent = d.fun_fact || 'Plants convert sunlight into vitality.';
+    }
+
+    function setLoading(isLoading) {
+      document.getElementById('scanCard').style.display = isLoading ? 'none' : 'block';
+      document.getElementById('loader').style.display = isLoading ? 'block' : 'none';
+      document.getElementById('resultView').style.display = 'none';
+    }
+
+    function resetApp() {
+      setLoading(false);
+      cameraInput.value = '';
+      fileInput.value = '';
+      document.getElementById('scanCard').style.display = 'block';
+      document.getElementById('resultView').style.display = 'none';
+    }
+  </script>
+</body>
+</html>
