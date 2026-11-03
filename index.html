@@ -7,7 +7,7 @@
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Noto+Sans+Gurmukhi:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
     :root {
@@ -38,7 +38,7 @@
     body {
       background-color: var(--bg-warm);
       color: var(--text-main);
-      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-family: 'Plus Jakarta Sans', 'Noto Sans Devanagari', 'Noto Sans Gurmukhi', sans-serif;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
@@ -47,7 +47,7 @@
     }
 
     h1, h2, h3, h4 {
-      font-family: 'Fraunces', serif;
+      font-family: 'Fraunces', 'Noto Sans Devanagari', 'Noto Sans Gurmukhi', serif;
       color: var(--green-dark);
     }
 
@@ -67,6 +67,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 0.75rem;
     }
 
     .brand {
@@ -89,6 +90,37 @@
       place-items: center;
     }
 
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    /* Language Switcher Dropdown */
+    .lang-switcher {
+      display: flex;
+      align-items: center;
+      background: var(--bg-card);
+      border: 1px solid var(--border-beige);
+      border-radius: var(--radius-full);
+      padding: 0.2rem 0.6rem;
+      font-size: 0.8rem;
+      color: var(--green-dark);
+      font-weight: 600;
+    }
+
+    .lang-select {
+      background: transparent;
+      border: none;
+      color: var(--green-dark);
+      font-family: inherit;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      outline: none;
+      padding: 0.2rem 0.2rem 0.2rem 0.4rem;
+    }
+
     .badge {
       font-size: 0.75rem;
       font-weight: 600;
@@ -97,6 +129,7 @@
       background: var(--green-tint);
       color: var(--green-dark);
       border: 1px solid var(--border-green);
+      white-space: nowrap;
     }
 
     .container {
@@ -113,8 +146,9 @@
     }
 
     .hero h2 {
-      font-size: clamp(2rem, 4vw, 2.5rem);
+      font-size: clamp(1.8rem, 4vw, 2.4rem);
       margin-bottom: 0.5rem;
+      line-height: 1.25;
     }
 
     .hero p {
@@ -273,7 +307,7 @@
 
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
       gap: 1rem;
       margin-bottom: 1.5rem;
     }
@@ -310,6 +344,7 @@
       font-size: 0.9rem;
       margin-bottom: 1.5rem;
       color: #4D3718;
+      line-height: 1.5;
     }
 
     footer {
@@ -330,16 +365,28 @@
           <!-- Leaf SVG -->
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>
         </div>
-        <span>Plant Lens</span>
+        <span data-i18n="brandTitle">Plant Lens</span>
       </a>
-      <span class="badge">Plant Lens AI</span>
+
+      <div class="nav-actions">
+        <!-- Language Switcher -->
+        <div class="lang-switcher">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          <select id="langSelect" class="lang-select" onchange="changeLanguage(this.value)">
+            <option value="en">English</option>
+            <option value="hi">हिन्दी</option>
+            <option value="pa">ਪੰਜਾਬੀ</option>
+          </select>
+        </div>
+        <span class="badge" data-i18n="badgeText">Plant Lens AI</span>
+      </div>
     </div>
   </nav>
 
   <main class="container">
     <div class="hero">
-      <h2>Instant Plant Identification</h2>
-      <p>Snap a picture or upload foliage to receive botanical data & care instructions.</p>
+      <h2 data-i18n="heroTitle">Instant Plant Identification</h2>
+      <p data-i18n="heroSubtitle">Snap a picture or upload foliage to receive botanical data & care instructions.</p>
     </div>
 
     <!-- Hidden Native Inputs -->
@@ -350,20 +397,19 @@
     <div class="card" id="scanCard">
       <div class="dropzone" id="dropzone">
         <div class="drop-icon">
-          <!-- Camera/Plus SVG -->
           <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
         </div>
-        <h3>Take Photo or Drop Image Here</h3>
-        <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem;">Supports JPG, PNG, WEBP</p>
+        <h3 data-i18n="dropzonePrompt">Take Photo or Drop Image Here</h3>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem;" data-i18n="dropzoneSupport">Supports JPG, PNG, WEBP</p>
         
         <div class="btn-group">
           <button class="btn btn-primary" onclick="document.getElementById('cameraInput').click()">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
-            Take Photo
+            <span data-i18n="btnTakePhoto">Take Photo</span>
           </button>
           <button class="btn btn-secondary" onclick="document.getElementById('fileInput').click()">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-            Upload Photo
+            <span data-i18n="btnUploadPhoto">Upload Photo</span>
           </button>
         </div>
       </div>
@@ -374,8 +420,8 @@
       <div class="spin-leaf">
         <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/></svg>
       </div>
-      <h3>Analyzing Foliage...</h3>
-      <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.3rem;">Plant Lens AI is inspecting leaf structures...</p>
+      <h3 data-i18n="loadingTitle">Analyzing Foliage...</h3>
+      <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.3rem;" data-i18n="loadingDesc">Plant Lens AI is inspecting leaf structures...</p>
     </div>
 
     <!-- Results Section -->
@@ -399,7 +445,7 @@
         <div class="metric-card">
           <div class="metric-title">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="M2 12h2"/><path d="M20 12h2"/></svg>
-            Light
+            <span data-i18n="metricLight">Light</span>
           </div>
           <div class="metric-val" id="metricLight">-</div>
         </div>
@@ -407,7 +453,7 @@
         <div class="metric-card">
           <div class="metric-title">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
-            Water
+            <span data-i18n="metricWater">Water</span>
           </div>
           <div class="metric-val" id="metricWater">-</div>
         </div>
@@ -415,7 +461,7 @@
         <div class="metric-card">
           <div class="metric-title">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 5.172a2 2 0 0 0-3.414 0l-3.87 6.7A2 2 0 0 0 4.458 15h15.084a2 2 0 0 0 1.742-3.128l-3.87-6.7A2 2 0 0 0 14 5.172Z"/></svg>
-            Pet Safety
+            <span data-i18n="metricPet">Pet Safety</span>
           </div>
           <div class="metric-val" id="metricPet">-</div>
         </div>
@@ -423,31 +469,140 @@
         <div class="metric-card">
           <div class="metric-title">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
-            Health Status
+            <span data-i18n="metricHealth">Health Status</span>
           </div>
           <div class="metric-val" id="metricHealth">-</div>
         </div>
       </div>
 
       <div class="fun-fact">
-        <strong>Did you know?</strong> <span id="funFactText"></span>
+        <strong data-i18n="didYouKnow">Did you know?</strong> <span id="funFactText"></span>
       </div>
 
       <button class="btn btn-secondary" onclick="resetApp()">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
-        Scan Another Plant
+        <span data-i18n="btnScanAgain">Scan Another Plant</span>
       </button>
     </div>
   </main>
 
   <footer>
-    Deployed on Cloudflare Pages • Built with Plant Lens AI
+    <span data-i18n="footerText">Deployed on Cloudflare Pages • Built with Plant Lens AI</span>
   </footer>
 
-  <!-- Canvas for fast image resizing -->
   <canvas id="canvas" style="display: none;"></canvas>
 
   <script>
+    // --- Internationalization / Translations Dictionary ---
+    const translations = {
+      en: {
+        brandTitle: "Plant Lens",
+        badgeText: "Plant Lens AI",
+        heroTitle: "Instant Plant Identification",
+        heroSubtitle: "Snap a picture or upload foliage to receive botanical data & care instructions.",
+        dropzonePrompt: "Take Photo or Drop Image Here",
+        dropzoneSupport: "Supports JPG, PNG, WEBP",
+        btnTakePhoto: "Take Photo",
+        btnUploadPhoto: "Upload Photo",
+        loadingTitle: "Analyzing Foliage...",
+        loadingDesc: "Plant Lens AI is inspecting leaf structures...",
+        metricLight: "Light",
+        metricWater: "Water",
+        metricPet: "Pet Safety",
+        metricHealth: "Health Status",
+        didYouKnow: "Did you know?",
+        btnScanAgain: "Scan Another Plant",
+        footerText: "Deployed on Cloudflare Pages • Built with Plant Lens AI",
+        petSafe: "Safe for Pets",
+        petToxic: "Toxic to Pets",
+        careSuffix: " Care",
+        alertSelectImage: "Please upload an image.",
+        alertNoPlant: "No plant detected. Please try another close-up photo.",
+        alertError: "Error identifying plant: "
+      },
+      hi: {
+        brandTitle: "प्लांट लेंस",
+        badgeText: "प्लांट लेंस AI",
+        heroTitle: "पौधों की तुरंत पहचान करें",
+        heroSubtitle: "तस्वीर लें या पत्ती की फोटो अपलोड करें और वनस्पति विवरण व देखभाल संबंधी जानकारी पाएं।",
+        dropzonePrompt: "फोटो लें या इमेज यहाँ छोड़ें",
+        dropzoneSupport: "JPG, PNG, WEBP समर्थित",
+        btnTakePhoto: "फोटो खींचें",
+        btnUploadPhoto: "फोटो अपलोड करें",
+        loadingTitle: "पत्तियों का विश्लेषण हो रहा है...",
+        loadingDesc: "प्लांट लेंस AI पौधे की पत्तियों और संरचना की जांच कर रहा है...",
+        metricLight: "धूप व रोशनी",
+        metricWater: "पानी की आवश्यकता",
+        metricPet: "पालतू सुरक्षा",
+        metricHealth: "स्वास्थ्य स्थिति",
+        didYouKnow: "क्या आप जानते हैं?",
+        btnScanAgain: "दूसरा पौधा स्कैन करें",
+        footerText: "Cloudflare Pages पर होस्ट किया गया • Plant Lens AI द्वारा संचालित",
+        petSafe: "पालतू जानवरों के लिए सुरक्षित",
+        petToxic: "पालतू जानवरों के लिए विषाक्त",
+        careSuffix: " देखभाल",
+        alertSelectImage: "कृपया एक तस्वीर अपलोड करें।",
+        alertNoPlant: "कोई पौधा नहीं मिला। कृपया पास से स्पष्ट तस्वीर लें।",
+        alertError: "पौधे की पहचान में त्रुटि: "
+      },
+      pa: {
+        brandTitle: "ਪਲਾਂਟ ਲੈਂਸ",
+        badgeText: "ਪਲਾਂਟ ਲੈਂਸ AI",
+        heroTitle: "ਪੌਦਿਆਂ ਦੀ ਤੁਰੰਤ ਪਛਾਣ",
+        heroSubtitle: "ਫੋਟੋ ਖਿੱਚੋ ਜਾਂ ਤਸਵੀਰ ਅੱਪਲੋਡ ਕਰੋ ਅਤੇ ਬੋਟੈਨੀਕਲ ਜਾਣਕਾਰੀ ਅਤੇ ਸਾਂਭ-ਸੰਭਾਲ ਦੇ ਨੁਸਖੇ ਪ੍ਰਾਪਤ ਕਰੋ।",
+        dropzonePrompt: "ਫੋਟੋ ਖਿੱਚੋ ਜਾਂ ਇੱਥੇ ਡ੍ਰੌਪ ਕਰੋ",
+        dropzoneSupport: "JPG, PNG, WEBP ਸਮਰਥਿਤ",
+        btnTakePhoto: "ਫੋਟੋ ਖਿੱਚੋ",
+        btnUploadPhoto: "ਫੋਟੋ ਅੱਪਲੋਡ ਕਰੋ",
+        loadingTitle: "ਪੱਤਿਆਂ ਦੀ ਜਾਂਚ ਹੋ ਰਹੀ ਹੈ...",
+        loadingDesc: "ਪਲਾਂਟ ਲੈਂਸ AI ਪੌਦੇ ਦੀ ਬਣਤਰ ਦੀ ਜਾਂਚ ਕਰ ਰਿਹਾ ਹੈ...",
+        metricLight: "ਧੁੱਪ / ਰੌਸ਼ਨੀ",
+        metricWater: "ਪਾਣੀ ਦੀ ਲੋੜ",
+        metricPet: "ਪਾਲਤੂਆਂ ਲਈ ਸੁਰੱਖਿਆ",
+        metricHealth: "ਸਿਹਤ ਸਥਿਤੀ",
+        didYouKnow: "ਕੀ ਤੁਸੀਂ ਜਾਣਦੇ ਹੋ?",
+        btnScanAgain: "ਕੋਈ ਹੋਰ ਪੌਦਾ ਸਕੈਨ ਕਰੋ",
+        footerText: "Cloudflare Pages 'ਤੇ ਸੰਚਾਲਿਤ • Plant Lens AI ਦੁਆਰਾ ਬਣਾਇਆ ਗਿਆ",
+        petSafe: "ਪਾਲਤੂ ਜਾਨਵਰਾਂ ਲਈ ਸੁਰੱਖਿਅਤ",
+        petToxic: "ਪਾਲਤੂ ਜਾਨਵਰਾਂ ਲਈ ਹਾਨੀਕਾਰਕ",
+        careSuffix: " ਦੇਖਭਾਲ",
+        alertSelectImage: "ਕਿਰਪਾ ਕਰਕੇ ਕੋਈ ਤਸਵੀਰ ਅੱਪਲੋਡ ਕਰੋ।",
+        alertNoPlant: "ਕੋਈ ਪੌਦਾ ਨਹੀਂ ਮਿਲਿਆ। ਕਿਰਪਾ ਕਰਕੇ ਨੇੜਿਓਂ ਸਾਫ਼ ਫੋਟੋ ਲਵੋ।",
+        alertError: "ਪੌਦੇ ਦੀ ਪਛਾਣ ਵਿੱਚ ਸਮੱਸਿਆ ਆਈ: "
+      }
+    };
+
+    let currentLang = localStorage.getItem('flora_lang') || 'en';
+    let lastResultData = null;
+
+    function applyLanguage(lang) {
+      currentLang = lang;
+      localStorage.setItem('flora_lang', lang);
+      document.documentElement.lang = lang;
+      document.getElementById('langSelect').value = lang;
+
+      const t = translations[lang] || translations.en;
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (t[key]) el.textContent = t[key];
+      });
+
+      // Update active view dynamic labels if plant data is already displayed
+      if (lastResultData) {
+        renderPlant(lastResultData);
+      }
+    }
+
+    function changeLanguage(lang) {
+      applyLanguage(lang);
+    }
+
+    // Initialize Language on load
+    document.addEventListener('DOMContentLoaded', () => {
+      applyLanguage(currentLang);
+    });
+
+    // Elements & Event Listeners
     const cameraInput = document.getElementById('cameraInput');
     const fileInput = document.getElementById('fileInput');
     const dropzone = document.getElementById('dropzone');
@@ -468,9 +623,10 @@
       if (e.dataTransfer.files?.[0]) handleFile(e.dataTransfer.files[0]);
     });
 
-    // Fast client-side image compression (~1000px)
+    // Image compression and resize
     async function handleFile(file) {
-      if (!file.type.startsWith('image/')) return alert('Please upload an image.');
+      const t = translations[currentLang] || translations.en;
+      if (!file.type.startsWith('image/')) return alert(t.alertSelectImage);
 
       setLoading(true);
 
@@ -502,30 +658,37 @@
     }
 
     async function sendToApi(base64Image) {
+      const t = translations[currentLang] || translations.en;
       try {
         const res = await fetch('/api/identify', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ image: base64Image, mimeType: 'image/jpeg' })
+          body: JSON.stringify({ 
+            image: base64Image, 
+            mimeType: 'image/jpeg',
+            language: currentLang // Transmits language context to AI API
+          })
         });
 
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || 'Server error');
 
         if (!data.is_plant) {
-          alert('No plant detected. Please try another close-up photo.');
+          alert(t.alertNoPlant);
           resetApp();
           return;
         }
 
+        lastResultData = data;
         renderPlant(data);
       } catch (err) {
-        alert('Error identifying plant: ' + err.message);
+        alert(t.alertError + err.message);
         resetApp();
       }
     }
 
     function renderPlant(d) {
+      const t = translations[currentLang] || translations.en;
       setLoading(false);
       document.getElementById('scanCard').style.display = 'none';
       document.getElementById('resultView').style.display = 'block';
@@ -534,18 +697,21 @@
       document.getElementById('plantSciName').textContent = d.scientific_name || '';
       document.getElementById('tagFamily').textContent = d.family || 'Botanic';
       document.getElementById('tagOrigin').textContent = d.origin || 'Tropical';
-      document.getElementById('tagCare').textContent = (d.care_level || 'Moderate') + ' Care';
+      
+      const careVal = d.care_level || (currentLang === 'hi' ? 'सामान्य' : currentLang === 'pa' ? 'ਸਧਾਰਨ' : 'Moderate');
+      document.getElementById('tagCare').textContent = careVal + t.careSuffix;
+      
       document.getElementById('plantSummary').textContent = d.summary || '';
 
-      document.getElementById('metricLight').textContent = d.light || 'Bright Indirect';
-      document.getElementById('metricWater').textContent = d.water || 'Moderate';
+      document.getElementById('metricLight').textContent = d.light || '-';
+      document.getElementById('metricWater').textContent = d.water || '-';
       
       const petVal = document.getElementById('metricPet');
-      petVal.textContent = d.pet_safe ? 'Safe for Pets' : 'Toxic to Pets';
+      petVal.textContent = d.pet_safe ? t.petSafe : t.petToxic;
       petVal.style.color = d.pet_safe ? 'var(--success-text)' : 'var(--danger-text)';
 
-      document.getElementById('metricHealth').textContent = d.health?.status || 'Healthy';
-      document.getElementById('funFactText').textContent = d.fun_fact || 'Plants convert sunlight into vitality.';
+      document.getElementById('metricHealth').textContent = d.health?.status || '-';
+      document.getElementById('funFactText').textContent = d.fun_fact || '';
     }
 
     function setLoading(isLoading) {
@@ -555,6 +721,7 @@
     }
 
     function resetApp() {
+      lastResultData = null;
       setLoading(false);
       cameraInput.value = '';
       fileInput.value = '';
