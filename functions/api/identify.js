@@ -24,7 +24,7 @@ export async function onRequestPost(context) {
     const targetLang = langDirectives[language] || "English";
 
     // Use gemini-2.0-flash-lite for lowest cost per token
-    const model = context.env.GEMINI_MODEL || "gemini-2.0-flash-lite";
+    const model = context.env.GEMINI_MODEL || "gemini-3.5-flash-lite";
     const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
 
     const prompt = `You are a clinical plant pathologist. Diagnose the photo.
