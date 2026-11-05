@@ -60,10 +60,11 @@
       background: var(--surface);
       border: 1px solid var(--surface-border);
       color: var(--text);
-      padding: 0.3rem 0.6rem;
+      padding: 0.35rem 0.65rem;
       border-radius: 6px;
       font-size: 0.85rem;
       cursor: pointer;
+      outline: none;
     }
 
     main {
@@ -87,18 +88,22 @@
       padding: 2.5rem 1rem;
       text-align: center;
       cursor: pointer;
+      transition: border-color 0.15s ease, background 0.15s ease;
     }
-    .dropzone:hover { border-color: var(--text-muted); }
+    .dropzone.dragover {
+      border-color: var(--color-healthy);
+      background: rgba(34, 197, 94, 0.05);
+    }
 
     .btn-row {
       display: flex;
       gap: 0.75rem;
       justify-content: center;
-      margin-top: 1rem;
+      margin-top: 1.25rem;
     }
 
     .btn {
-      padding: 0.6rem 1.2rem;
+      padding: 0.65rem 1.25rem;
       font-weight: 600;
       font-size: 0.88rem;
       border-radius: 8px;
@@ -107,8 +112,10 @@
       display: inline-flex;
       align-items: center;
       gap: 0.4rem;
+      transition: opacity 0.15s ease;
     }
-    .btn-primary { background: #22C55E; color: #000; }
+    .btn:active { transform: scale(0.98); }
+    .btn-primary { background: var(--color-healthy); color: #000; }
     .btn-secondary { background: var(--surface-border); color: #FFF; }
 
     /* Results */
@@ -125,13 +132,14 @@
       object-fit: cover;
       border-radius: 8px;
       border: 1px solid var(--surface-border);
+      background: #000;
     }
 
     .status-badge {
       display: inline-block;
       font-family: 'Space Grotesk', sans-serif;
       font-weight: 700;
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       padding: 0.25rem 0.6rem;
       border-radius: 4px;
       text-transform: uppercase;
@@ -150,7 +158,7 @@
       margin: 1rem 0;
     }
     .data-box {
-      background: rgba(0,0,0,0.25);
+      background: rgba(0,0,0,0.3);
       border: 1px solid var(--surface-border);
       padding: 0.75rem;
       border-radius: 8px;
@@ -167,7 +175,7 @@
     .treatment-box {
       background: rgba(34, 197, 94, 0.05);
       border-left: 3px solid var(--color-healthy);
-      padding: 0.75rem 1rem;
+      padding: 0.85rem 1rem;
       margin: 1rem 0;
       border-radius: 0 8px 8px 0;
     }
@@ -206,17 +214,17 @@
     <div class="card" id="uploadCard">
       <div class="dropzone" id="dropzone">
         <p style="font-size: 0.95rem; font-weight: 600;" id="dropLabel">Scan Foliage or Leaf Problem</p>
-        <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.3rem;">Direct image, auto-compressed</p>
+        <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.3rem;">Auto-clamps to 768px (1 Gemini Tile • Zero Cost Bloat)</p>
         <div class="btn-row">
-          <button class="btn btn-primary" onclick="document.getElementById('cam').click()" id="btnSnap">Camera</button>
-          <button class="btn btn-secondary" onclick="document.getElementById('file').click()" id="btnUpload">Upload</button>
+          <button class="btn btn-primary" id="btnSnap">Camera</button>
+          <button class="btn btn-secondary" id="btnUpload">Upload</button>
         </div>
       </div>
     </div>
 
     <!-- Spinner -->
     <div class="card loader" id="loader">
-      <p id="lblDiagnosing">Analyzing pathology...</p>
+      <p id="lblDiagnosing">Analyzing pathology with Gemini 3.5 Flash-Lite...</p>
     </div>
 
     <!-- Result Dashboard -->
@@ -231,7 +239,7 @@
       </div>
 
       <div class="treatment-box" id="treatmentBox">
-        <div class="data-label" id="lblIssue">DIAGNOSIS & REMEDY</div>
+        <div class="data-label" id="lblIssue">DIAGNOSIS & ACTION</div>
         <div id="issueText" style="font-weight: 600; font-size: 0.95rem; margin-bottom: 0.3rem;">None</div>
         <div id="symptomsText" style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.4rem;"></div>
         <div id="treatmentText" style="font-size: 0.88rem; font-weight: 500;"></div>
@@ -246,13 +254,13 @@
           <div class="data-label" id="lblWater">Water Routine</div>
           <div class="data-val" id="valWater">-</div>
         </div>
-        <div class="data-box">
+        <div class="data-box" style="grid-column: span 2;">
           <div class="data-label" id="lblPet">Pet Toxicity</div>
           <div class="data-val" id="valPet">-</div>
         </div>
       </div>
 
-      <button class="btn btn-secondary" style="width: 100%; justify-content: center;" onclick="resetUI()" id="btnNew">
+      <button class="btn btn-secondary" style="width: 100%; justify-content: center; margin-top: 0.5rem;" onclick="resetUI()" id="btnNew">
         New Scan
       </button>
     </div>
@@ -266,43 +274,61 @@
         drop: "Scan Foliage or Leaf Problem",
         snap: "Camera",
         upload: "Upload",
-        loading: "Running pathology scan...",
+        loading: "Analyzing pathology with Gemini 3.5 Flash-Lite...",
         diagRemedy: "DIAGNOSIS & ACTION",
         light: "Light Exposure",
         water: "Water Routine",
-        pet: "Pet Safe?",
+        pet: "Pet Toxicity",
         newScan: "New Scan",
-        safe: "Yes (Safe)",
-        toxic: "No (Toxic)",
-        noPlant: "No plant detected. Ensure the leaf or stem is clearly visible."
+        safe: "Safe for Pets",
+        toxic: "Toxic to Pets",
+        noPlant: "No plant detected. Ensure the foliage is centered and well lit.",
+        status: {
+          HEALTHY: "HEALTHY",
+          STRESSED: "STRESSED",
+          DISEASED: "DISEASED",
+          PEST: "PEST INFESTED"
+        }
       },
       hi: {
         drop: "पत्ती या पौधे की समस्या स्कैन करें",
         snap: "कैमरा",
         upload: "अपलोड",
-        loading: "रोग और स्वास्थ्य की जांच जारी है...",
-        diagRemedy: "जांच और समाधान",
+        loading: "Gemini 3.5 Flash-Lite द्वारा विश्लेषण जारी है...",
+        diagRemedy: "जांच और उपचार",
         light: "धूप की आवश्यकता",
         water: "पानी का नियम",
         pet: "पालतू सुरक्षा",
         newScan: "नया स्कैन",
-        safe: "सुरक्षित",
-        toxic: "हानिकारक (विषाक्त)",
-        noPlant: "कोई पौधा नहीं मिला। कृपया पत्ती को स्पष्ट रूप से दिखाएं।"
+        safe: "पालतू जानवरों के लिए सुरक्षित",
+        toxic: "पालतू जानवरों के लिए विषाक्त",
+        noPlant: "कोई पौधा नहीं मिला। कृपया पत्ती की स्पष्ट फोटो लें।",
+        status: {
+          HEALTHY: "स्वस्थ",
+          STRESSED: "तनावग्रस्त",
+          DISEASED: "रोगग्रस्त",
+          PEST: "कीट प्रकोप"
+        }
       },
       pa: {
         drop: "ਪੌਦੇ ਜਾਂ ਪੱਤੇ ਦੀ ਸਮੱਸਿਆ ਸਕੈਨ ਕਰੋ",
         snap: "ਕੈਮਰਾ",
         upload: "ਅੱਪਲੋਡ",
-        loading: "ਪੌਦੇ ਦੀ ਸਿਹਤ ਦੀ ਜਾਂਚ ਜਾਰੀ ਹੈ...",
+        loading: "Gemini 3.5 Flash-Lite ਦੁਆਰਾ ਜਾਂਚ ਜਾਰੀ ਹੈ...",
         diagRemedy: "ਜਾਂਚ ਅਤੇ ਇਲਾਜ",
         light: "ਧੁੱਪ ਦੀ ਲੋੜ",
         water: "ਪਾਣੀ ਦੀ ਲੋੜ",
         pet: "ਪਾਲਤੂਆਂ ਲਈ ਸੁਰੱਖਿਆ",
         newScan: "ਨਵਾਂ ਸਕੈਨ",
-        safe: "ਸੁਰੱਖਿਅਤ",
-        toxic: "ਹਾਨੀਕਾਰਕ",
-        noPlant: "ਕੋਈ ਪੌਦਾ ਨਹੀਂ ਮਿਲਿਆ। ਕਿਰਪਾ ਕਰਕੇ ਸਾਫ਼ ਫੋਟੋ ਲਵੋ।"
+        safe: "ਪਾਲਤੂਆਂ ਲਈ ਸੁਰੱਖਿਅਤ",
+        toxic: "ਪਾਲਤੂਆਂ ਲਈ ਹਾਨੀਕਾਰਕ",
+        noPlant: "ਕੋਈ ਪੌਦਾ ਨਹੀਂ ਮਿਲਿਆ। ਕਿਰਪਾ ਕਰਕੇ ਸਾਫ਼ ਫੋਟੋ ਲਵੋ।",
+        status: {
+          HEALTHY: "ਤੰਦਰੁਸਤ",
+          STRESSED: "ਤਣਾਅ ਵਿੱਚ",
+          DISEASED: "ਬਿਮਾਰ",
+          PEST: "ਕੀੜੇ ਦਾ ਹਮਲਾ"
+        }
       }
     };
 
@@ -327,11 +353,27 @@
 
     const cam = document.getElementById('cam');
     const file = document.getElementById('file');
+    const dropzone = document.getElementById('dropzone');
+
+    document.getElementById('btnSnap').onclick = (e) => { e.stopPropagation(); cam.click(); };
+    document.getElementById('btnUpload').onclick = (e) => { e.stopPropagation(); file.click(); };
+    dropzone.onclick = () => file.click();
+
     [cam, file].forEach(el => el.addEventListener('change', e => {
       if (e.target.files?.[0]) processImage(e.target.files[0]);
     }));
 
-    // Cost optimization: Clamp to 768px and 0.65 JPEG to ensure 1 Gemini image tile (258 tokens)
+    ['dragover', 'dragenter'].forEach(ev => {
+      dropzone.addEventListener(ev, e => { e.preventDefault(); dropzone.classList.add('dragover'); });
+    });
+    ['dragleave', 'drop'].forEach(ev => {
+      dropzone.addEventListener(ev, e => { e.preventDefault(); dropzone.classList.remove('dragover'); });
+    });
+    dropzone.addEventListener('drop', e => {
+      if (e.dataTransfer?.files?.[0]) processImage(e.dataTransfer.files[0]);
+    });
+
+    // Clamps image strictly to max 768px: fits in 1 Gemini image tile (258 tokens instead of 1032+)
     function processImage(fileObj) {
       setLoading(true);
       const reader = new FileReader();
@@ -347,6 +389,10 @@
           const cvs = document.getElementById('cvs');
           cvs.width = w; cvs.height = h;
           const ctx = cvs.getContext('2d');
+          
+          // White fill ensures transparent PNGs don't render black
+          ctx.fillStyle = "#FFFFFF";
+          ctx.fillRect(0, 0, w, h);
           ctx.drawImage(img, 0, 0, w, h);
 
           const dataUrl = cvs.toDataURL('image/jpeg', 0.65);
@@ -358,16 +404,17 @@
       reader.readAsDataURL(fileObj);
     }
 
-    async function callAPI(base64) {
+    async function callAPI(base64Data) {
       const t = i18n[currentLang] || i18n.en;
       try {
         const res = await fetch('/api/identify', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ image: base64, language: currentLang })
+          body: JSON.stringify({ image: base64Data, mimeType: 'image/jpeg', language: currentLang })
         });
+        
         const data = await res.json();
-        if (!res.ok) throw new Error(data.error || 'Request failed');
+        if (!res.ok) throw new Error(data.error || 'Server error occurred');
 
         if (!data.is_plant) {
           alert(t.noPlant);
@@ -388,15 +435,16 @@
       document.getElementById('resultView').style.display = 'block';
 
       const t = i18n[currentLang] || i18n.en;
-      document.getElementById('plantName').innerText = d.name || 'Identified Specimen';
+      document.getElementById('plantName').innerText = d.name || 'Identified Plant';
       document.getElementById('plantLatin').innerText = d.latin_name || '';
 
+      const st = (d.status || 'HEALTHY').toUpperCase();
       const badge = document.getElementById('diagBadge');
-      badge.className = `status-badge status-${d.status}`;
-      badge.innerText = d.status;
+      badge.className = `status-badge status-${st}`;
+      badge.innerText = t.status[st] || st;
 
       const treatBox = document.getElementById('treatmentBox');
-      treatBox.className = (d.status === 'HEALTHY') ? 'treatment-box' : 'treatment-box danger';
+      treatBox.className = (st === 'HEALTHY') ? 'treatment-box' : 'treatment-box danger';
 
       document.getElementById('issueText').innerText = d.issue || 'None';
       document.getElementById('symptomsText').innerText = d.symptoms || '';
