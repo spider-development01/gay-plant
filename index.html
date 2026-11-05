@@ -3,729 +3,423 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FloraScan — Plant Identifier</title>
-  
+  <title>PlantRx — Health & Diagnosis</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Noto+Sans+Gurmukhi:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      --bg-warm: #FAF7F2;
-      --bg-card: #F4EFE6;
-      --bg-card-subtle: #ECE4D6;
-      --green-dark: #1E3B2B;
-      --green-primary: #2C523C;
-      --green-accent: #3E7052;
-      --green-tint: #E8F0EB;
-      --text-main: #232B25;
-      --text-muted: #616B63;
-      --border-beige: #DECDB7;
-      --border-green: #B7D1C1;
-      --danger-bg: #FBECE8;
-      --danger-text: #9B3922;
-      --success-bg: #EAF4EE;
-      --success-text: #21633D;
-      --radius-sm: 8px;
-      --radius-md: 14px;
-      --radius-lg: 22px;
-      --radius-full: 9999px;
-      --shadow: 0 8px 24px rgba(30, 59, 43, 0.08);
+      --bg: #0F1412;
+      --surface: #18201C;
+      --surface-border: #26332D;
+      --text: #ECF2EE;
+      --text-muted: #8E9F95;
+      
+      --color-healthy: #22C55E;
+      --color-stressed: #EAB308;
+      --color-diseased: #EF4444;
+      --color-pest: #F97316;
+      
+      --radius: 12px;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
     body {
-      background-color: var(--bg-warm);
-      color: var(--text-main);
-      font-family: 'Plus Jakarta Sans', 'Noto Sans Devanagari', 'Noto Sans Gurmukhi', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', system-ui, sans-serif;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      background-image: radial-gradient(var(--bg-card-subtle) 1px, transparent 1px);
-      background-size: 24px 24px;
-    }
-
-    h1, h2, h3, h4 {
-      font-family: 'Fraunces', 'Noto Sans Devanagari', 'Noto Sans Gurmukhi', serif;
-      color: var(--green-dark);
-    }
-
-    .navbar {
-      background: rgba(250, 247, 242, 0.95);
-      backdrop-filter: blur(8px);
-      border-bottom: 1px solid var(--border-beige);
-      padding: 0.85rem 1.25rem;
-      position: sticky;
-      top: 0;
-      z-index: 50;
-    }
-
-    .nav-container {
-      max-width: 1000px;
-      margin: 0 auto;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 0.75rem;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-      text-decoration: none;
-      color: var(--green-dark);
-      font-weight: 700;
-      font-size: 1.2rem;
-    }
-
-    .brand-icon {
-      width: 36px;
-      height: 36px;
-      background: var(--green-primary);
-      color: #FFF;
-      border-radius: var(--radius-sm);
-      display: grid;
-      place-items: center;
-    }
-
-    .nav-actions {
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-    }
-
-    /* Language Switcher Dropdown */
-    .lang-switcher {
-      display: flex;
-      align-items: center;
-      background: var(--bg-card);
-      border: 1px solid var(--border-beige);
-      border-radius: var(--radius-full);
-      padding: 0.2rem 0.6rem;
-      font-size: 0.8rem;
-      color: var(--green-dark);
-      font-weight: 600;
-    }
-
-    .lang-select {
-      background: transparent;
-      border: none;
-      color: var(--green-dark);
-      font-family: inherit;
-      font-size: 0.82rem;
-      font-weight: 600;
-      cursor: pointer;
-      outline: none;
-      padding: 0.2rem 0.2rem 0.2rem 0.4rem;
-    }
-
-    .badge {
-      font-size: 0.75rem;
-      font-weight: 600;
-      padding: 0.3rem 0.7rem;
-      border-radius: var(--radius-full);
-      background: var(--green-tint);
-      color: var(--green-dark);
-      border: 1px solid var(--border-green);
-      white-space: nowrap;
-    }
-
-    .container {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 2rem 1.25rem;
-      flex: 1;
-      width: 100%;
-    }
-
-    .hero {
-      text-align: center;
-      margin-bottom: 2rem;
-    }
-
-    .hero h2 {
-      font-size: clamp(1.8rem, 4vw, 2.4rem);
-      margin-bottom: 0.5rem;
-      line-height: 1.25;
-    }
-
-    .hero p {
-      color: var(--text-muted);
-      font-size: 1rem;
-    }
-
-    .card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-beige);
-      border-radius: var(--radius-lg);
-      padding: 2rem;
-      box-shadow: var(--shadow);
-      margin-bottom: 2rem;
-    }
-
-    .dropzone {
-      border: 2px dashed var(--border-beige);
-      background: var(--bg-warm);
-      border-radius: var(--radius-md);
-      padding: 2.5rem 1.5rem;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .dropzone:hover, .dropzone.dragover {
-      border-color: var(--green-accent);
-      background: var(--green-tint);
-    }
-
-    .drop-icon {
-      width: 56px;
-      height: 56px;
-      border-radius: 50%;
-      background: var(--bg-card);
-      color: var(--green-primary);
-      display: grid;
-      place-items: center;
-      margin: 0 auto 1rem;
-      border: 1px solid var(--border-beige);
-    }
-
-    .btn-group {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 0.8rem;
-      margin-top: 1.25rem;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-family: inherit;
-      font-size: 0.9rem;
-      font-weight: 600;
-      padding: 0.65rem 1.25rem;
-      border-radius: var(--radius-full);
-      border: none;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .btn:active { transform: scale(0.97); }
-
-    .btn-primary {
-      background: var(--green-primary);
-      color: #FFF;
-    }
-    .btn-primary:hover { background: var(--green-dark); }
-
-    .btn-secondary {
-      background: var(--bg-card);
-      border: 1px solid var(--border-beige);
-      color: var(--green-dark);
-    }
-    .btn-secondary:hover { background: var(--bg-card-subtle); }
-
-    input[type="file"] { display: none; }
-
-    /* Loader */
-    .loader {
-      display: none;
-      text-align: center;
-      padding: 3rem 1rem;
-    }
-
-    .spin-leaf {
-      color: var(--green-primary);
-      animation: spin 1.8s infinite ease-in-out;
-      margin-bottom: 1rem;
-    }
-
-    @keyframes spin {
-      0%, 100% { transform: rotate(-8deg); }
-      50% { transform: rotate(8deg) scale(1.1); }
-    }
-
-    /* Result View */
-    .result-view {
-      display: none;
-      animation: fadeIn 0.3s ease;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .plant-header {
-      display: grid;
-      grid-template-columns: 240px 1fr;
-      gap: 1.5rem;
-      margin-bottom: 1.5rem;
-    }
-
-    @media (max-width: 650px) {
-      .plant-header { grid-template-columns: 1fr; }
-    }
-
-    .plant-img {
-      width: 100%;
-      height: 240px;
-      border-radius: var(--radius-md);
-      object-fit: cover;
-      border: 1px solid var(--border-beige);
-      background: #000;
-    }
-
-    .scientific {
-      font-family: 'Fraunces', serif;
-      font-style: italic;
-      color: var(--green-accent);
-      font-size: 1.1rem;
-      margin-bottom: 0.6rem;
-    }
-
-    .tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.4rem;
-      margin-bottom: 0.8rem;
-    }
-
-    .tag {
-      font-size: 0.72rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      padding: 0.25rem 0.6rem;
-      border-radius: var(--radius-full);
-      background: var(--bg-card-subtle);
-      border: 1px solid var(--border-beige);
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 1rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .metric-card {
-      background: var(--bg-warm);
-      border: 1px solid var(--border-beige);
-      border-radius: var(--radius-md);
       padding: 1rem;
     }
 
-    .metric-title {
-      font-size: 0.75rem;
+    header {
+      max-width: 680px;
+      margin: 0 auto 1.5rem;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--surface-border);
+      padding-bottom: 0.75rem;
+    }
+
+    .brand {
+      font-family: 'Space Grotesk', sans-serif;
       font-weight: 700;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      margin-bottom: 0.3rem;
+      font-size: 1.15rem;
+      color: #FFF;
       display: flex;
       align-items: center;
-      gap: 0.35rem;
+      gap: 0.5rem;
     }
 
-    .metric-val {
-      font-weight: 600;
-      color: var(--green-dark);
-      font-size: 0.95rem;
+    .lang-select {
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      color: var(--text);
+      padding: 0.3rem 0.6rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      cursor: pointer;
     }
 
-    .fun-fact {
-      background: #FAF3E6;
-      border-left: 4px solid var(--green-accent);
-      padding: 1rem 1.25rem;
-      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-      font-size: 0.9rem;
-      margin-bottom: 1.5rem;
-      color: #4D3718;
-      line-height: 1.5;
+    main {
+      max-width: 680px;
+      margin: 0 auto;
+      width: 100%;
+      flex: 1;
     }
 
-    footer {
-      text-align: center;
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      border-radius: var(--radius);
       padding: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .dropzone {
+      border: 2px dashed var(--surface-border);
+      border-radius: 8px;
+      padding: 2.5rem 1rem;
+      text-align: center;
+      cursor: pointer;
+    }
+    .dropzone:hover { border-color: var(--text-muted); }
+
+    .btn-row {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: center;
+      margin-top: 1rem;
+    }
+
+    .btn {
+      padding: 0.6rem 1.2rem;
+      font-weight: 600;
+      font-size: 0.88rem;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .btn-primary { background: #22C55E; color: #000; }
+    .btn-secondary { background: var(--surface-border); color: #FFF; }
+
+    /* Results */
+    #resultView { display: none; }
+    .diagnosis-header {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+    }
+    .plant-preview {
+      width: 90px;
+      height: 90px;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 1px solid var(--surface-border);
+    }
+
+    .status-badge {
+      display: inline-block;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
       font-size: 0.8rem;
+      padding: 0.25rem 0.6rem;
+      border-radius: 4px;
+      text-transform: uppercase;
+      margin-bottom: 0.4rem;
+    }
+
+    .status-HEALTHY { background: rgba(34, 197, 94, 0.15); color: var(--color-healthy); }
+    .status-STRESSED { background: rgba(234, 179, 8, 0.15); color: var(--color-stressed); }
+    .status-DISEASED { background: rgba(239, 68, 68, 0.15); color: var(--color-diseased); }
+    .status-PEST { background: rgba(249, 115, 22, 0.15); color: var(--color-pest); }
+
+    .data-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+      margin: 1rem 0;
+    }
+    .data-box {
+      background: rgba(0,0,0,0.25);
+      border: 1px solid var(--surface-border);
+      padding: 0.75rem;
+      border-radius: 8px;
+    }
+    .data-label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
       color: var(--text-muted);
-      border-top: 1px solid var(--border-beige);
+      font-weight: 600;
+      margin-bottom: 0.2rem;
+    }
+    .data-val { font-size: 0.9rem; font-weight: 500; }
+
+    .treatment-box {
+      background: rgba(34, 197, 94, 0.05);
+      border-left: 3px solid var(--color-healthy);
+      padding: 0.75rem 1rem;
+      margin: 1rem 0;
+      border-radius: 0 8px 8px 0;
+    }
+    .treatment-box.danger {
+      background: rgba(239, 68, 68, 0.05);
+      border-color: var(--color-diseased);
+    }
+
+    .loader {
+      display: none;
+      text-align: center;
+      padding: 2.5rem 1rem;
+      color: var(--text-muted);
     }
   </style>
 </head>
 <body>
 
-  <nav class="navbar">
-    <div class="nav-container">
-      <a href="#" class="brand" onclick="location.reload()">
-        <div class="brand-icon">
-          <!-- Leaf SVG -->
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>
-        </div>
-        <span data-i18n="brandTitle">Plant Lens</span>
-      </a>
-
-      <div class="nav-actions">
-        <!-- Language Switcher -->
-        <div class="lang-switcher">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-          <select id="langSelect" class="lang-select" onchange="changeLanguage(this.value)">
-            <option value="en">English</option>
-            <option value="hi">हिन्दी</option>
-            <option value="pa">ਪੰਜਾਬੀ</option>
-          </select>
-        </div>
-        <span class="badge" data-i18n="badgeText">Plant Lens AI</span>
-      </div>
+  <header>
+    <div class="brand">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="2.5"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6"/></svg>
+      PlantRx
     </div>
-  </nav>
+    <select id="langSelect" class="lang-select" onchange="switchLang(this.value)">
+      <option value="en">English</option>
+      <option value="hi">हिन्दी</option>
+      <option value="pa">ਪੰਜਾਬੀ</option>
+    </select>
+  </header>
 
-  <main class="container">
-    <div class="hero">
-      <h2 data-i18n="heroTitle">Instant Plant Identification</h2>
-      <p data-i18n="heroSubtitle">Snap a picture or upload foliage to receive botanical data & care instructions.</p>
-    </div>
+  <main>
+    <input type="file" id="cam" accept="image/*" capture="environment" style="display:none">
+    <input type="file" id="file" accept="image/*" style="display:none">
 
-    <!-- Hidden Native Inputs -->
-    <input type="file" id="cameraInput" accept="image/*" capture="environment">
-    <input type="file" id="fileInput" accept="image/*">
-
-    <!-- Upload Box -->
-    <div class="card" id="scanCard">
+    <!-- Upload View -->
+    <div class="card" id="uploadCard">
       <div class="dropzone" id="dropzone">
-        <div class="drop-icon">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
-        </div>
-        <h3 data-i18n="dropzonePrompt">Take Photo or Drop Image Here</h3>
-        <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem;" data-i18n="dropzoneSupport">Supports JPG, PNG, WEBP</p>
-        
-        <div class="btn-group">
-          <button class="btn btn-primary" onclick="document.getElementById('cameraInput').click()">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
-            <span data-i18n="btnTakePhoto">Take Photo</span>
-          </button>
-          <button class="btn btn-secondary" onclick="document.getElementById('fileInput').click()">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-            <span data-i18n="btnUploadPhoto">Upload Photo</span>
-          </button>
+        <p style="font-size: 0.95rem; font-weight: 600;" id="dropLabel">Scan Foliage or Leaf Problem</p>
+        <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.3rem;">Direct image, auto-compressed</p>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="document.getElementById('cam').click()" id="btnSnap">Camera</button>
+          <button class="btn btn-secondary" onclick="document.getElementById('file').click()" id="btnUpload">Upload</button>
         </div>
       </div>
     </div>
 
-    <!-- Loader -->
+    <!-- Spinner -->
     <div class="card loader" id="loader">
-      <div class="spin-leaf">
-        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/></svg>
-      </div>
-      <h3 data-i18n="loadingTitle">Analyzing Foliage...</h3>
-      <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.3rem;" data-i18n="loadingDesc">Plant Lens AI is inspecting leaf structures...</p>
+      <p id="lblDiagnosing">Analyzing pathology...</p>
     </div>
 
-    <!-- Results Section -->
-    <div class="card result-view" id="resultView">
-      <div class="plant-header">
-        <img id="plantImg" class="plant-img" src="" alt="Plant Preview">
+    <!-- Result Dashboard -->
+    <div class="card" id="resultView">
+      <div class="diagnosis-header">
+        <img id="plantImg" class="plant-preview" alt="Leaf Sample">
         <div>
-          <div class="tags">
-            <span class="tag" id="tagFamily">Family</span>
-            <span class="tag" id="tagOrigin">Origin</span>
-            <span class="tag" id="tagCare" style="background: var(--green-tint); color: var(--green-dark);">Easy Care</span>
-          </div>
-          <h2 id="plantName" style="font-size: 1.8rem; margin-bottom: 0.2rem;">Common Name</h2>
-          <div class="scientific" id="plantSciName">Scientific Name</div>
-          <p id="plantSummary" style="font-size: 0.92rem; color: var(--text-muted); line-height: 1.5;"></p>
+          <span id="diagBadge" class="status-badge">HEALTHY</span>
+          <h2 id="plantName" style="font-size: 1.25rem;">Plant Name</h2>
+          <p id="plantLatin" style="font-style: italic; color: var(--text-muted); font-size: 0.85rem;"></p>
         </div>
       </div>
 
-      <!-- Quick Metrics Grid -->
-      <div class="grid">
-        <div class="metric-card">
-          <div class="metric-title">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="M2 12h2"/><path d="M20 12h2"/></svg>
-            <span data-i18n="metricLight">Light</span>
-          </div>
-          <div class="metric-val" id="metricLight">-</div>
-        </div>
+      <div class="treatment-box" id="treatmentBox">
+        <div class="data-label" id="lblIssue">DIAGNOSIS & REMEDY</div>
+        <div id="issueText" style="font-weight: 600; font-size: 0.95rem; margin-bottom: 0.3rem;">None</div>
+        <div id="symptomsText" style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.4rem;"></div>
+        <div id="treatmentText" style="font-size: 0.88rem; font-weight: 500;"></div>
+      </div>
 
-        <div class="metric-card">
-          <div class="metric-title">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
-            <span data-i18n="metricWater">Water</span>
-          </div>
-          <div class="metric-val" id="metricWater">-</div>
+      <div class="data-grid">
+        <div class="data-box">
+          <div class="data-label" id="lblLight">Light Exposure</div>
+          <div class="data-val" id="valLight">-</div>
         </div>
-
-        <div class="metric-card">
-          <div class="metric-title">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 5.172a2 2 0 0 0-3.414 0l-3.87 6.7A2 2 0 0 0 4.458 15h15.084a2 2 0 0 0 1.742-3.128l-3.87-6.7A2 2 0 0 0 14 5.172Z"/></svg>
-            <span data-i18n="metricPet">Pet Safety</span>
-          </div>
-          <div class="metric-val" id="metricPet">-</div>
+        <div class="data-box">
+          <div class="data-label" id="lblWater">Water Routine</div>
+          <div class="data-val" id="valWater">-</div>
         </div>
-
-        <div class="metric-card">
-          <div class="metric-title">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
-            <span data-i18n="metricHealth">Health Status</span>
-          </div>
-          <div class="metric-val" id="metricHealth">-</div>
+        <div class="data-box">
+          <div class="data-label" id="lblPet">Pet Toxicity</div>
+          <div class="data-val" id="valPet">-</div>
         </div>
       </div>
 
-      <div class="fun-fact">
-        <strong data-i18n="didYouKnow">Did you know?</strong> <span id="funFactText"></span>
-      </div>
-
-      <button class="btn btn-secondary" onclick="resetApp()">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
-        <span data-i18n="btnScanAgain">Scan Another Plant</span>
+      <button class="btn btn-secondary" style="width: 100%; justify-content: center;" onclick="resetUI()" id="btnNew">
+        New Scan
       </button>
     </div>
   </main>
 
-  <footer>
-    <span data-i18n="footerText">Deployed on Cloudflare Pages • Built with Plant Lens AI</span>
-  </footer>
-
-  <canvas id="canvas" style="display: none;"></canvas>
+  <canvas id="cvs" style="display:none"></canvas>
 
   <script>
-    // --- Internationalization / Translations Dictionary ---
-    const translations = {
+    const i18n = {
       en: {
-        brandTitle: "Plant Lens",
-        badgeText: "Plant Lens AI",
-        heroTitle: "Instant Plant Identification",
-        heroSubtitle: "Snap a picture or upload foliage to receive botanical data & care instructions.",
-        dropzonePrompt: "Take Photo or Drop Image Here",
-        dropzoneSupport: "Supports JPG, PNG, WEBP",
-        btnTakePhoto: "Take Photo",
-        btnUploadPhoto: "Upload Photo",
-        loadingTitle: "Analyzing Foliage...",
-        loadingDesc: "Plant Lens AI is inspecting leaf structures...",
-        metricLight: "Light",
-        metricWater: "Water",
-        metricPet: "Pet Safety",
-        metricHealth: "Health Status",
-        didYouKnow: "Did you know?",
-        btnScanAgain: "Scan Another Plant",
-        footerText: "Deployed on Cloudflare Pages • Built with Plant Lens AI",
-        petSafe: "Safe for Pets",
-        petToxic: "Toxic to Pets",
-        careSuffix: " Care",
-        alertSelectImage: "Please upload an image.",
-        alertNoPlant: "No plant detected. Please try another close-up photo.",
-        alertError: "Error identifying plant: "
+        drop: "Scan Foliage or Leaf Problem",
+        snap: "Camera",
+        upload: "Upload",
+        loading: "Running pathology scan...",
+        diagRemedy: "DIAGNOSIS & ACTION",
+        light: "Light Exposure",
+        water: "Water Routine",
+        pet: "Pet Safe?",
+        newScan: "New Scan",
+        safe: "Yes (Safe)",
+        toxic: "No (Toxic)",
+        noPlant: "No plant detected. Ensure the leaf or stem is clearly visible."
       },
       hi: {
-        brandTitle: "प्लांट लेंस",
-        badgeText: "प्लांट लेंस AI",
-        heroTitle: "पौधों की तुरंत पहचान करें",
-        heroSubtitle: "तस्वीर लें या पत्ती की फोटो अपलोड करें और वनस्पति विवरण व देखभाल संबंधी जानकारी पाएं।",
-        dropzonePrompt: "फोटो लें या इमेज यहाँ छोड़ें",
-        dropzoneSupport: "JPG, PNG, WEBP समर्थित",
-        btnTakePhoto: "फोटो खींचें",
-        btnUploadPhoto: "फोटो अपलोड करें",
-        loadingTitle: "पत्तियों का विश्लेषण हो रहा है...",
-        loadingDesc: "प्लांट लेंस AI पौधे की पत्तियों और संरचना की जांच कर रहा है...",
-        metricLight: "धूप व रोशनी",
-        metricWater: "पानी की आवश्यकता",
-        metricPet: "पालतू सुरक्षा",
-        metricHealth: "स्वास्थ्य स्थिति",
-        didYouKnow: "क्या आप जानते हैं?",
-        btnScanAgain: "दूसरा पौधा स्कैन करें",
-        footerText: "Cloudflare Pages पर होस्ट किया गया • Plant Lens AI द्वारा संचालित",
-        petSafe: "पालतू जानवरों के लिए सुरक्षित",
-        petToxic: "पालतू जानवरों के लिए विषाक्त",
-        careSuffix: " देखभाल",
-        alertSelectImage: "कृपया एक तस्वीर अपलोड करें।",
-        alertNoPlant: "कोई पौधा नहीं मिला। कृपया पास से स्पष्ट तस्वीर लें।",
-        alertError: "पौधे की पहचान में त्रुटि: "
+        drop: "पत्ती या पौधे की समस्या स्कैन करें",
+        snap: "कैमरा",
+        upload: "अपलोड",
+        loading: "रोग और स्वास्थ्य की जांच जारी है...",
+        diagRemedy: "जांच और समाधान",
+        light: "धूप की आवश्यकता",
+        water: "पानी का नियम",
+        pet: "पालतू सुरक्षा",
+        newScan: "नया स्कैन",
+        safe: "सुरक्षित",
+        toxic: "हानिकारक (विषाक्त)",
+        noPlant: "कोई पौधा नहीं मिला। कृपया पत्ती को स्पष्ट रूप से दिखाएं।"
       },
       pa: {
-        brandTitle: "ਪਲਾਂਟ ਲੈਂਸ",
-        badgeText: "ਪਲਾਂਟ ਲੈਂਸ AI",
-        heroTitle: "ਪੌਦਿਆਂ ਦੀ ਤੁਰੰਤ ਪਛਾਣ",
-        heroSubtitle: "ਫੋਟੋ ਖਿੱਚੋ ਜਾਂ ਤਸਵੀਰ ਅੱਪਲੋਡ ਕਰੋ ਅਤੇ ਬੋਟੈਨੀਕਲ ਜਾਣਕਾਰੀ ਅਤੇ ਸਾਂਭ-ਸੰਭਾਲ ਦੇ ਨੁਸਖੇ ਪ੍ਰਾਪਤ ਕਰੋ।",
-        dropzonePrompt: "ਫੋਟੋ ਖਿੱਚੋ ਜਾਂ ਇੱਥੇ ਡ੍ਰੌਪ ਕਰੋ",
-        dropzoneSupport: "JPG, PNG, WEBP ਸਮਰਥਿਤ",
-        btnTakePhoto: "ਫੋਟੋ ਖਿੱਚੋ",
-        btnUploadPhoto: "ਫੋਟੋ ਅੱਪਲੋਡ ਕਰੋ",
-        loadingTitle: "ਪੱਤਿਆਂ ਦੀ ਜਾਂਚ ਹੋ ਰਹੀ ਹੈ...",
-        loadingDesc: "ਪਲਾਂਟ ਲੈਂਸ AI ਪੌਦੇ ਦੀ ਬਣਤਰ ਦੀ ਜਾਂਚ ਕਰ ਰਿਹਾ ਹੈ...",
-        metricLight: "ਧੁੱਪ / ਰੌਸ਼ਨੀ",
-        metricWater: "ਪਾਣੀ ਦੀ ਲੋੜ",
-        metricPet: "ਪਾਲਤੂਆਂ ਲਈ ਸੁਰੱਖਿਆ",
-        metricHealth: "ਸਿਹਤ ਸਥਿਤੀ",
-        didYouKnow: "ਕੀ ਤੁਸੀਂ ਜਾਣਦੇ ਹੋ?",
-        btnScanAgain: "ਕੋਈ ਹੋਰ ਪੌਦਾ ਸਕੈਨ ਕਰੋ",
-        footerText: "Cloudflare Pages 'ਤੇ ਸੰਚਾਲਿਤ • Plant Lens AI ਦੁਆਰਾ ਬਣਾਇਆ ਗਿਆ",
-        petSafe: "ਪਾਲਤੂ ਜਾਨਵਰਾਂ ਲਈ ਸੁਰੱਖਿਅਤ",
-        petToxic: "ਪਾਲਤੂ ਜਾਨਵਰਾਂ ਲਈ ਹਾਨੀਕਾਰਕ",
-        careSuffix: " ਦੇਖਭਾਲ",
-        alertSelectImage: "ਕਿਰਪਾ ਕਰਕੇ ਕੋਈ ਤਸਵੀਰ ਅੱਪਲੋਡ ਕਰੋ।",
-        alertNoPlant: "ਕੋਈ ਪੌਦਾ ਨਹੀਂ ਮਿਲਿਆ। ਕਿਰਪਾ ਕਰਕੇ ਨੇੜਿਓਂ ਸਾਫ਼ ਫੋਟੋ ਲਵੋ।",
-        alertError: "ਪੌਦੇ ਦੀ ਪਛਾਣ ਵਿੱਚ ਸਮੱਸਿਆ ਆਈ: "
+        drop: "ਪੌਦੇ ਜਾਂ ਪੱਤੇ ਦੀ ਸਮੱਸਿਆ ਸਕੈਨ ਕਰੋ",
+        snap: "ਕੈਮਰਾ",
+        upload: "ਅੱਪਲੋਡ",
+        loading: "ਪੌਦੇ ਦੀ ਸਿਹਤ ਦੀ ਜਾਂਚ ਜਾਰੀ ਹੈ...",
+        diagRemedy: "ਜਾਂਚ ਅਤੇ ਇਲਾਜ",
+        light: "ਧੁੱਪ ਦੀ ਲੋੜ",
+        water: "ਪਾਣੀ ਦੀ ਲੋੜ",
+        pet: "ਪਾਲਤੂਆਂ ਲਈ ਸੁਰੱਖਿਆ",
+        newScan: "ਨਵਾਂ ਸਕੈਨ",
+        safe: "ਸੁਰੱਖਿਅਤ",
+        toxic: "ਹਾਨੀਕਾਰਕ",
+        noPlant: "ਕੋਈ ਪੌਦਾ ਨਹੀਂ ਮਿਲਿਆ। ਕਿਰਪਾ ਕਰਕੇ ਸਾਫ਼ ਫੋਟੋ ਲਵੋ।"
       }
     };
 
-    let currentLang = localStorage.getItem('flora_lang') || 'en';
-    let lastResultData = null;
+    let currentLang = localStorage.getItem('prx_lang') || 'en';
 
-    function applyLanguage(lang) {
+    function switchLang(lang) {
       currentLang = lang;
-      localStorage.setItem('flora_lang', lang);
-      document.documentElement.lang = lang;
+      localStorage.setItem('prx_lang', lang);
       document.getElementById('langSelect').value = lang;
-
-      const t = translations[lang] || translations.en;
-      document.querySelectorAll('[data-i18n]').forEach(el => {
-        const key = el.getAttribute('data-i18n');
-        if (t[key]) el.textContent = t[key];
-      });
-
-      // Update active view dynamic labels if plant data is already displayed
-      if (lastResultData) {
-        renderPlant(lastResultData);
-      }
+      const t = i18n[lang] || i18n.en;
+      document.getElementById('dropLabel').innerText = t.drop;
+      document.getElementById('btnSnap').innerText = t.snap;
+      document.getElementById('btnUpload').innerText = t.upload;
+      document.getElementById('lblDiagnosing').innerText = t.loading;
+      document.getElementById('lblIssue').innerText = t.diagRemedy;
+      document.getElementById('lblLight').innerText = t.light;
+      document.getElementById('lblWater').innerText = t.water;
+      document.getElementById('lblPet').innerText = t.pet;
+      document.getElementById('btnNew').innerText = t.newScan;
     }
+    switchLang(currentLang);
 
-    function changeLanguage(lang) {
-      applyLanguage(lang);
-    }
+    const cam = document.getElementById('cam');
+    const file = document.getElementById('file');
+    [cam, file].forEach(el => el.addEventListener('change', e => {
+      if (e.target.files?.[0]) processImage(e.target.files[0]);
+    }));
 
-    // Initialize Language on load
-    document.addEventListener('DOMContentLoaded', () => {
-      applyLanguage(currentLang);
-    });
-
-    // Elements & Event Listeners
-    const cameraInput = document.getElementById('cameraInput');
-    const fileInput = document.getElementById('fileInput');
-    const dropzone = document.getElementById('dropzone');
-
-    [cameraInput, fileInput].forEach(inp => {
-      inp.addEventListener('change', e => {
-        if (e.target.files && e.target.files[0]) handleFile(e.target.files[0]);
-      });
-    });
-
-    ['dragover', 'dragenter'].forEach(eName => {
-      dropzone.addEventListener(eName, (e) => { e.preventDefault(); dropzone.classList.add('dragover'); });
-    });
-    ['dragleave', 'drop'].forEach(eName => {
-      dropzone.addEventListener(eName, (e) => { e.preventDefault(); dropzone.classList.remove('dragover'); });
-    });
-    dropzone.addEventListener('drop', (e) => {
-      if (e.dataTransfer.files?.[0]) handleFile(e.dataTransfer.files[0]);
-    });
-
-    // Image compression and resize
-    async function handleFile(file) {
-      const t = translations[currentLang] || translations.en;
-      if (!file.type.startsWith('image/')) return alert(t.alertSelectImage);
-
+    // Cost optimization: Clamp to 768px and 0.65 JPEG to ensure 1 Gemini image tile (258 tokens)
+    function processImage(fileObj) {
       setLoading(true);
-
       const reader = new FileReader();
       reader.onload = (e) => {
         const img = new Image();
         img.onload = () => {
-          const maxDim = 1024;
+          const max = 768;
           let w = img.width, h = img.height;
-          if (w > maxDim) {
-            h = Math.round((h * maxDim) / w);
-            w = maxDim;
+          if (w > max || h > max) {
+            if (w > h) { h = Math.round((h * max) / w); w = max; }
+            else { w = Math.round((w * max) / h); h = max; }
           }
-          const canvas = document.getElementById('canvas');
-          canvas.width = w;
-          canvas.height = h;
-          const ctx = canvas.getContext('2d');
+          const cvs = document.getElementById('cvs');
+          cvs.width = w; cvs.height = h;
+          const ctx = cvs.getContext('2d');
           ctx.drawImage(img, 0, 0, w, h);
 
-          const dataUrl = canvas.toDataURL('image/jpeg', 0.82);
-          const base64 = dataUrl.split(',')[1];
+          const dataUrl = cvs.toDataURL('image/jpeg', 0.65);
           document.getElementById('plantImg').src = dataUrl;
-
-          sendToApi(base64);
+          callAPI(dataUrl.split(',')[1]);
         };
         img.src = e.target.result;
       };
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(fileObj);
     }
 
-    async function sendToApi(base64Image) {
-      const t = translations[currentLang] || translations.en;
+    async function callAPI(base64) {
+      const t = i18n[currentLang] || i18n.en;
       try {
         const res = await fetch('/api/identify', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ 
-            image: base64Image, 
-            mimeType: 'image/jpeg',
-            language: currentLang // Transmits language context to AI API
-          })
+          body: JSON.stringify({ image: base64, language: currentLang })
         });
-
         const data = await res.json();
-        if (!res.ok) throw new Error(data.error || 'Server error');
+        if (!res.ok) throw new Error(data.error || 'Request failed');
 
         if (!data.is_plant) {
-          alert(t.alertNoPlant);
-          resetApp();
+          alert(t.noPlant);
+          resetUI();
           return;
         }
 
-        lastResultData = data;
-        renderPlant(data);
+        renderResult(data);
       } catch (err) {
-        alert(t.alertError + err.message);
-        resetApp();
+        alert(err.message);
+        resetUI();
       }
     }
 
-    function renderPlant(d) {
-      const t = translations[currentLang] || translations.en;
+    function renderResult(d) {
       setLoading(false);
-      document.getElementById('scanCard').style.display = 'none';
+      document.getElementById('uploadCard').style.display = 'none';
       document.getElementById('resultView').style.display = 'block';
 
-      document.getElementById('plantName').textContent = d.common_name || 'Unknown Specimen';
-      document.getElementById('plantSciName').textContent = d.scientific_name || '';
-      document.getElementById('tagFamily').textContent = d.family || 'Botanic';
-      document.getElementById('tagOrigin').textContent = d.origin || 'Tropical';
-      
-      const careVal = d.care_level || (currentLang === 'hi' ? 'सामान्य' : currentLang === 'pa' ? 'ਸਧਾਰਨ' : 'Moderate');
-      document.getElementById('tagCare').textContent = careVal + t.careSuffix;
-      
-      document.getElementById('plantSummary').textContent = d.summary || '';
+      const t = i18n[currentLang] || i18n.en;
+      document.getElementById('plantName').innerText = d.name || 'Identified Specimen';
+      document.getElementById('plantLatin').innerText = d.latin_name || '';
 
-      document.getElementById('metricLight').textContent = d.light || '-';
-      document.getElementById('metricWater').textContent = d.water || '-';
-      
-      const petVal = document.getElementById('metricPet');
-      petVal.textContent = d.pet_safe ? t.petSafe : t.petToxic;
-      petVal.style.color = d.pet_safe ? 'var(--success-text)' : 'var(--danger-text)';
+      const badge = document.getElementById('diagBadge');
+      badge.className = `status-badge status-${d.status}`;
+      badge.innerText = d.status;
 
-      document.getElementById('metricHealth').textContent = d.health?.status || '-';
-      document.getElementById('funFactText').textContent = d.fun_fact || '';
+      const treatBox = document.getElementById('treatmentBox');
+      treatBox.className = (d.status === 'HEALTHY') ? 'treatment-box' : 'treatment-box danger';
+
+      document.getElementById('issueText').innerText = d.issue || 'None';
+      document.getElementById('symptomsText').innerText = d.symptoms || '';
+      document.getElementById('treatmentText').innerText = d.treatment || '';
+
+      document.getElementById('valLight').innerText = d.light || '-';
+      document.getElementById('valWater').innerText = d.water || '-';
+      
+      const petEl = document.getElementById('valPet');
+      petEl.innerText = d.pet_safe ? t.safe : t.toxic;
+      petEl.style.color = d.pet_safe ? 'var(--color-healthy)' : 'var(--color-diseased)';
     }
 
     function setLoading(isLoading) {
-      document.getElementById('scanCard').style.display = isLoading ? 'none' : 'block';
+      document.getElementById('uploadCard').style.display = isLoading ? 'none' : 'block';
       document.getElementById('loader').style.display = isLoading ? 'block' : 'none';
       document.getElementById('resultView').style.display = 'none';
     }
 
-    function resetApp() {
-      lastResultData = null;
+    function resetUI() {
       setLoading(false);
-      cameraInput.value = '';
-      fileInput.value = '';
-      document.getElementById('scanCard').style.display = 'block';
+      cam.value = ''; file.value = '';
+      document.getElementById('uploadCard').style.display = 'block';
       document.getElementById('resultView').style.display = 'none';
     }
   </script>
